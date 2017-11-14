@@ -1,3 +1,6 @@
+#reads data from CSV files and plots and overlays distribution using ggplot2 package
+
+
 fill <- "#4271AE"
 line <- "#1F3552"
 
