@@ -1,4 +1,5 @@
-#reads data from CSV files and plots and overlays distribution using ggplot2 package
+# reads data from CSV files and plots and overlays distribution using ggplot2 package
+# Each CSV file has different number of rows
 
 
 fill <- "#4271AE"
