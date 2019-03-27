@@ -1,8 +1,3 @@
-## Download
-[Rstudio](https://www.rstudio.com/)
+## Description
 
-## What the code does
-This code was created to split a larger .csv file (Master file) and split it into individual small .csv file and plotting them iteratvely.
-
-
-
+Placeholder for miscellaneous R scripts to wrangle and visualize data
