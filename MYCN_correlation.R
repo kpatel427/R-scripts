@@ -45,7 +45,7 @@ sample.mycn.risk$Sample_title <- gsub(" ","",sample.mycn.risk$Sample_title, fixe
 
 
 
-# genes of interest gene list
+# Kristen's gene list
 gene <- scan("identified_genelist.txt", what = "", sep = ",")
 df.gene <- as.data.frame(gene)
 
@@ -58,7 +58,7 @@ matrix.genelist <-  merge(matrix.genelist,sample.mycn.risk, by = "Sample_title")
 matrix.genelist <- matrix.genelist %>%
   filter(matrix.genelist$value > 1.00)
 
-plot.matrix.genelist <- matrix.genelist
+matrix.genelist <-  plot.matrix.genelist
 
 # Renaming factor levels
 levels(matrix.genelist$high_risk) <- c("Low Risk","High Risk")
@@ -80,5 +80,50 @@ ggplot(matrix.genelist, aes(x = X00gene_id, y = value, fill = mycn_status)) +
   theme_bw()
 
 
+# correlation of MYCN expression with the rest of the genes
+matrix.genelist.subset <- subset(matrix.genelist, matrix.genelist$X00gene_id != "MYCN", select = c(colnames(matrix.genelist)) )
+mycn.expr <- subset(matrix.genelist, matrix.genelist$X00gene_id == "MYCN", select = c("Sample_title","value") )
+colnames(mycn.expr)[colnames(mycn.expr)=="value"] <- "mycn_expression_value"
+
+matrix.genelist.subset <- merge(matrix.genelist.subset, mycn.expr, all.x = T ,by = "Sample_title")
+
+# Renaming factor levels
+levels(matrix.genelist.subset$high_risk) <- c("Low Risk","High Risk")
+levels(matrix.genelist.subset$mycn_status) <-  c("Non Amplified", "Amplified", "N/A")
+
+
+# plotting correlation ~ mycn_statis
+ggscatter(matrix.genelist.subset, x = "value", y = "mycn_expression_value",
+          shape = 1, alpha = 0.6,
+          add = "reg.line", conf.int = TRUE,
+          add.params = list(color = "blue", fill = "lightgray"),
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Genes", ylab = "Mycn expression") +
+  stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           label.x = 0.15, label.y = 1) +
+  facet_wrap(~mycn_status, scales="free_x") +
+  labs(x = "Genes of interest", y = "MYCN expression") + 
+  theme_bw()
+
+
+# plotting correlation ~ Risk
+ggscatter(matrix.genelist.subset, x = "value", y = "mycn_expression_value",
+          shape = 1, alpha = 0.6,
+          add = "reg.line", conf.int = TRUE,
+          add.params = list(color = "blue", fill = "lightgray"),
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Genes", ylab = "Mycn expression") +
+  stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+           label.x = 0.15, label.y = 1) +
+  facet_wrap(~high_risk, scales="free_x") +
+  labs(x = "Genes of interest", y = "MYCN expression") + 
+  theme_bw()
+
+
+ggplot(matrix.genelist.subset) +
+  geom_jitter(aes(value, mycn_expression_value, colour=mycn_status),) + 
+  geom_smooth(aes(value, mycn_expression_value, colour=mycn_status), method=lm, se=FALSE) +
+  facet_wrap(~mycn_status, scales="free_x") +
+  labs(x = "Genes of interest", y = "MYCN expression")
 
 
