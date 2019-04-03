@@ -45,7 +45,7 @@ sample.mycn.risk$Sample_title <- gsub(" ","",sample.mycn.risk$Sample_title, fixe
 
 
 
-# Kristen's gene list
+# genes of interest gene list
 gene <- scan("identified_genelist.txt", what = "", sep = ",")
 df.gene <- as.data.frame(gene)
 
