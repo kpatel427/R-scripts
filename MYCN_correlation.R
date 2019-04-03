@@ -45,7 +45,7 @@ sample.mycn.risk$Sample_title <- gsub(" ","",sample.mycn.risk$Sample_title, fixe
 
 
 
-# Kristen's gene list
+# Gene of interest gene list
 gene <- scan("identified_genelist.txt", what = "", sep = ",")
 df.gene <- as.data.frame(gene)
 
@@ -58,7 +58,7 @@ matrix.genelist <-  merge(matrix.genelist,sample.mycn.risk, by = "Sample_title")
 matrix.genelist <- matrix.genelist %>%
   filter(matrix.genelist$value > 1.00)
 
-matrix.genelist <-  plot.matrix.genelist
+#matrix.genelist <-  plot.matrix.genelist
 
 # Renaming factor levels
 levels(matrix.genelist$high_risk) <- c("Low Risk","High Risk")
@@ -125,5 +125,4 @@ ggplot(matrix.genelist.subset) +
   geom_smooth(aes(value, mycn_expression_value, colour=mycn_status), method=lm, se=FALSE) +
   facet_wrap(~mycn_status, scales="free_x") +
   labs(x = "Genes of interest", y = "MYCN expression")
-
 
