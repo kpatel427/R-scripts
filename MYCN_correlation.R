@@ -196,3 +196,18 @@ ggsave("wilcox-mycn-status.pdf", width = 7, height = 5)
 # there is no low risk amplified expression for the set of genes provided
 
 
+#--------------------------------------------------------------------------#
+# wilcox's test pairwise for genes (high risk-low risk)
+
+risk.wilcox <-  matrix.genelist %>%
+  group_by(X00gene_id) %>% 
+  summarise(p=wilcox.test(value~high_risk)$p.value)
+
+
+# wilcox's test pairwise for genes (mycn status)
+mycn.wilcox <-  matrix.genelist %>%
+  filter(mycn_status != "N/A") %>%
+  group_by(X00gene_id) %>% 
+  summarise(p=wilcox.test(value~mycn_status)$p.value)
+
+
