@@ -198,16 +198,43 @@ ggsave("wilcox-mycn-status.pdf", width = 7, height = 5)
 
 #--------------------------------------------------------------------------#
 # wilcox's test pairwise for genes (high risk-low risk)
-
 risk.wilcox <-  matrix.genelist %>%
   group_by(X00gene_id) %>% 
-  summarise(p=wilcox.test(value~high_risk)$p.value)
+  summarise(p.risk=wilcox.test(value~high_risk)$p.value,
+            p.risk.adj = p.adjust(p.risk,method = "bonferroni",n=12948))
 
 
 # wilcox's test pairwise for genes (mycn status)
 mycn.wilcox <-  matrix.genelist %>%
   filter(mycn_status != "N/A") %>%
   group_by(X00gene_id) %>% 
-  summarise(p=wilcox.test(value~mycn_status)$p.value)
+  summarise(p.mycn=wilcox.test(value~mycn_status)$p.value,
+            p.mycn.adj = p.adjust(p.mycn,method = "bonferroni",n=12948))
+
+
+genes.stats <- merge(risk.wilcox, mycn.wilcox, by = "X00gene_id")
+
+write.table(genes.stats, file = paste0(Sys.Date(), "-gene-stats.txt"), sep = "\t", quote = F, col.names = T, row.names = F)
+
+
+# boxplots for every gene for expression across high risk and low risk samples, colored by mycn status
+
+# remove those which have mycn status as N/A
+matrix.mycn.subset <- subset(matrix.genelist, matrix.genelist$mycn_status != "N/A", select = c(colnames(matrix.genelist)))
+matrix.mycn.subset$mycn_status <- droplevels(matrix.mycn.subset$mycn_status) # dropping unused levels
+
+matrix.mycn.subset <-  merge(matrix.mycn.subset, genes.stats, by = "X00gene_id")
+
+s <- ggplot(matrix.mycn.subset, aes(x = high_risk, y = value, fill = mycn_status)) +
+  geom_boxplot(aes(fill = factor(mycn_status))) +
+  #geom_text(aes(label = matrix.mycn.subset$p.mycn, group = matrix.mycn.subset$p.mycn ) ) +
+  labs(title = "FPKM Expression across High Risk and Low Risk Samples for each Gene", x = "", y = "FPKM") +
+  guides(fill=guide_legend(title= "MYCN status")) +
+  facet_wrap( ~ X00gene_id, ncol = 5, scales = "free") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_bw()
+#theme(axis.text.x = element_text(angle = 90))
+ggsave(paste0(Sys.Date(),"-boxplot-expression-each-gene-across-risk.pdf"), s, width = 17, height = 10)
+
 
 
