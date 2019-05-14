@@ -44,12 +44,16 @@ hprt1 <-  hprt1 %>%
   gather(.,variable,value,-c("X")) %>%
   mutate(mycn_status = ifelse(X %in% c("Kelly","NGP","SK-N-BE(2)"),"Amplified","Non-amplified"))
 
+hprt1 <-  subset(hprt1, hprt1$X != 'NBL-S', select = c(colnames(hprt1)))
+
 
 ggplot(hprt1, aes(x=X,y=value, fill =X, colour = mycn_status)) +
   geom_bar(stat="identity") +
   facet_wrap( ~ variable, scale = "free", ncol = 4) +
-  scale_fill_brewer(palette="Pastel2") +
-  scale_color_brewer(palette = "Dark2") +
+  scale_fill_manual(values=fillPalette) +
+  scale_color_manual(values = colorPalette) +
+  #scale_fill_brewer(palette="Pastel2") +
+  #scale_color_brewer(palette = "Dark2") +
   labs(title = "Normalized to HPRT1", x="Cell lines",y="expression values") +
   guides(fill = guide_legend("Cell Line"), colour = guide_legend("MYCN Status")) +
   theme_bw() +
