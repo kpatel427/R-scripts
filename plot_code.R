@@ -5,7 +5,7 @@ library(grid)
 
 # color mapping
 # to color cell lines with specific colors
-fillPalette <-  c("#104A7F","#C9C9C9","#97D1A9","#FDFDAC","#FDD6A2","#D49DC7")
+fillPalette <-  c("#104A7F","#C9C9C9","#97D1A9","#FDFDAC","#FDD6A2","#DBCDE9")
 cl <- c("SK-N-FI","SK-N-AS","NB-69","NGP","Kelly","SK-N-BE(2)")
 colorPalette <-  c("#47A1A7","#E97D72")
 mycn <- c("Non-amplified","Amplified")
@@ -66,3 +66,32 @@ ggsave(filename = paste0(Sys.Date(),"-RTqPCR-HPRT1-barplot.pdf"),plot = last_plo
 
 final.gene <- unique(gapdh$variable)
 write.table(final.gene, file = "2019-05-10-final-gene-list.txt", sep = "\t", row.names = F, col.names = F, quote = F)
+
+
+#-------------------- Patient Distribution for GSE49711 --------------------------#
+
+pd <- read.delim("../patient_dist_GSE49711.txt", sep = "\t", header = TRUE)
+colnames(pd) <-  c("Stage","MYCN_NonAmp","MYCN_Amp","ND","Total","Total_%")
+
+pd <-  pd %>%
+  select(colnames(pd)[1:4]) %>%
+  gather(key, value, -c(Stage))
+
+
+pd$key <-  gsub("MYCN_NonAmp","Non-Amplified", pd$key)
+pd$key <-  gsub("MYCN_Amp","Amplified", pd$key)
+pd$key <-  gsub("ND","N/A", pd$key)
+  
+
+ggplot(pd, aes(Stage,value, fill = key)) +
+  geom_bar(stat="identity", position = position_dodge()) +
+  geom_text(aes(label=value), position=position_dodge(width=0.9), vjust=-0.25) +
+  theme_bw() + 
+  scale_fill_manual(values = c("#00BA38","#619CFF","#F8766D")) +
+  labs(title = "Patient Distribution GSE49711", x = "Stage", y = "Number of Patients") +
+  guides(fill = guide_legend("MYCN Status")) +
+  theme(axis.text = element_text(size=12),
+        axis.title = element_text(size = 15),
+        legend.text = element_text(size=10))
+
+ggsave(filename = paste0(Sys.Date(),"-patient-distribution-GSE49711-barplot.pdf"),plot = last_plot(),width = 7, height=5, device = "pdf")
