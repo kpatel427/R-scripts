@@ -116,12 +116,3 @@ pheatmap(hm,
          cluster_rows=T,
          annotation_col = cellLine_col,
          fontsize = 8)
-
-
-
-# Plotting heatmap for the actual dataframe
-row.names(temp) <-  temp$X
-temp$X <-  NULL
-
-temp <-  data.matrix(temp)
-pheatmap(temp)
