@@ -3,8 +3,6 @@ library(dplyr)
 library(data.table)
 library(pheatmap)
 library(reshape)
-library(dendsort)
-library(heatmaply)
 
 # ---- Reading expression data ----
 expr <- read.delim("CCLE_expression_full.csv", sep = ",", header = T)
