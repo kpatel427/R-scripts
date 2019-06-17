@@ -2,7 +2,7 @@ library(tidyverse)
 library(dplyr)
 library(data.table)
 library(pheatmap)
-library(reshape)
+library(dendextend)
 
 # ---- Reading expression data ----
 expr <- read.delim("CCLE_expression_full.csv", sep = ",", header = T)
@@ -85,6 +85,10 @@ test <- test %>%
   group_by(stripped_cell_line_name,gene) %>%
   summarize(max.log2TPM = max(log2TPM))
 
+# filtering out genes with less than 2.321928 expression i.e. less than 5 TPM expression (log2(5))
+test <-  test %>%
+  filter(max.log2TPM > 2.321928)
+
 # widening the data
 temp <- dcast(test, gene ~ stripped_cell_line_name)
 temp[is.na(temp)] <- 0
@@ -95,22 +99,64 @@ temp[is.na(temp)] <- 0
 # 3. row.names should be present
 
 # working sample
-hm <- temp[1:100,]
+hm <- temp[100:200,]
 
 # creating column annotation
 cellLine_col <- data.frame(status)
 row.names(cellLine_col) <- cellLine_col[,1]
 cellLine_col$stripped_cell_line_name <-  NULL
 
-# removing genes with less than 1 log2TPM expression in all cell lines
-#hm <- hm[rowSums(hm < 1) ==17 , , drop = FALSE]
-
 row.names(hm) <- hm$gene
 hm$gene <-  NULL
+
+# clustering
+cluster = kmeans(hm, 4)
+cluster.genes <-  as.data.frame(cluster$cluster)
+setnames(cluster.genes, "cluster$cluster","cluster")
+
 hm <-  data.matrix(hm)
+
 pheatmap(hm,
+         show_rownames=T,
+         cluster_cols= T,
+         cluster_rows= T,
+         annotation_col = cellLine_col,
+         annotation_row = cluster.genes,
+         fontsize = 8)
+
+
+# working sample ends #
+
+# Plotting heatmap for the actual dataframe
+row.names(temp) <-  temp$gene
+temp$gene <-  NULL
+
+# clustering
+cluster = kmeans(temp, 3)
+cluster.genes <-  as.data.frame(cluster$cluster)
+setnames(cluster.genes, "cluster$cluster","cluster")
+
+
+temp <-  data.matrix(temp)
+pheatmap(temp,
          show_rownames=T,
          cluster_cols= T,
          cluster_rows=T,
          annotation_col = cellLine_col,
+         annotation_row = cluster.genes,
          fontsize = 8)
+
+# ---- get genes from clusters 2 & 3 ----
+filter_cluster <- cluster.genes %>%
+  rownames_to_column(var = "gene")
+
+gene.list <- subset(filter_cluster, filter_cluster$cluster != 1, select = c(colnames(filter_cluster)))
+
+#write.table(gene.list$gene, file = paste0(Sys.Date(), "-gene-list.txt"), quote = F, row.names = F, col.names = F)
+
+# ---- overlap gene list withh repressed and final list ----
+repressed.genes <- read.delim("/Volumes/target_nbl_ngs/KP/differentially-exp-gene-lists-MYCN/repressed_genes.txt", header = F, sep = "\t")
+
+overlap.genes <- as.data.frame(unique(intersect(repressed.genes$V1, gene.list$gene)))
+#write.table(overlap.genes, file = paste0(Sys.Date(), "-overlap-with-repressed-genes.txt"), quote = F, row.names = F, col.names = F)
+
