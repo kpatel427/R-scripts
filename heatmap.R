@@ -155,7 +155,7 @@ gene.list <- subset(filter_cluster, filter_cluster$cluster != 1, select = c(coln
 #write.table(gene.list$gene, file = paste0(Sys.Date(), "-gene-list.txt"), quote = F, row.names = F, col.names = F)
 
 # ---- overlap gene list withh repressed and final list ----
-repressed.genes <- read.delim("/Volumes/target_nbl_ngs/KP/differentially-exp-gene-lists-MYCN/repressed_genes.txt", header = F, sep = "\t")
+repressed.genes <- read.delim("~/KP/differentially-exp-gene-lists-MYCN/repressed_genes.txt", header = F, sep = "\t")
 
 overlap.genes <- as.data.frame(unique(intersect(repressed.genes$V1, gene.list$gene)))
 #write.table(overlap.genes, file = paste0(Sys.Date(), "-overlap-with-repressed-genes.txt"), quote = F, row.names = F, col.names = F)
