@@ -255,12 +255,22 @@ QC.mycn <- summary.2 %>%
   tally()
 
 
-genes.tobe.removed <- c("FOXA3","TACR1","CNIH3","DHDH",
-                       "DNAAF1", "ENO4", "KCNK13")
+genes.risk <- as.character(setDT(QC.risk)[n ==1,X00gene_id])
+genes.risk <- strsplit(genes.risk," ")
+
+genes.tobe.removed <- as.character(setDT(QC.mycn)[n ==1,X00gene_id])
+genes.tobe.removed<- strsplit(genes.tobe.removed," ")
+
+genes.tobe.removed<- unlist(append(genes.tobe.removed,genes.risk))
+genes.tobe.removed <- unique(genes.tobe.removed)
+
+  
+  
 # remove rows corresponding with these genes
 matrix.genelist <- matrix.genelist %>%
   rowwise() %>% 
   filter( !(X00gene_id %in% genes.tobe.removed) )
+
 
 #--------------------------------------------------------------------------#
 # wilcox's test pairwise for genes (high risk-low risk)
