@@ -1,5 +1,6 @@
 # this function uses pheatmap package to make heatmaps
 # Takes input matrix and row annotation
+# normalizes matrix values
 # outputs heatmap with clustered rows (k=3) with row annotation
 plotHeatMap <-  function(mat, gene_anno){
   
