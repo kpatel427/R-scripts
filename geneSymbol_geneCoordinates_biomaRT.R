@@ -1,7 +1,7 @@
 # script to get Ensemble gene ID's for gene symbols
 library(biomaRt)
 
-df <-  read.delim('2019-09-11_mycnAmp_SE_LILY_calls_filtered.txt', header = F)
+df <-  read.delim('genelist.txt', header = F)
 genes <- df$V1
 
 ensembl = useMart("ensembl",dataset="hsapiens_gene_ensembl")
