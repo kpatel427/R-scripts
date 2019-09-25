@@ -2,14 +2,14 @@ library(boxr)
 
 box_auth() 
 
-box_ls(dir_id = 87809132620) # NBSD GPC2 CAR escaped tumors_RNA seq_9_2019 folder
-box_ls(dir_id = 87943295083) # 2019-09-23-RNAseq-Fastq-files folder 
+box_ls(dir_id = 8xxxxxx)
+box_ls(dir_id = 8xxxxxx) 
 
 # set working dir
-box_setwd(dir_id = 87943295083)
+box_setwd(dir_id = 10xxxxxx)
 
 # download specific files
-files <- box_search(query = "_001.fastq.gz", ancestor_folder_ids = 87943295083)
+files <- box_search(query = "_001.fastq.gz", ancestor_folder_ids = 10xxxxxx)
 
 files[[1]]$id
 
@@ -33,12 +33,9 @@ for(x in files_to_download){
   
   # downloading files
   file_name <- as.data.frame(box_dl(file_id = id))
-  write.table(get(file_name), file = paste0('/mnt/isilon/maris_lab/target_nbl_ngs/KP/CAR_T_RNASeq/',file_name))
+  write.table(get(file_name), file = paste0('~/KP/reads/',file_name))
   
   print(paste0(file_name,' file written!'))
   
 }
-
-
-
 
