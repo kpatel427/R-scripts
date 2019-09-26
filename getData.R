@@ -1,3 +1,4 @@
+# script to download files from a folder on Box using Box api
 library(boxr)
 
 box_auth() 
@@ -32,8 +33,7 @@ for(x in files_to_download){
   print(paste0('Processing ',file_name))
   
   # downloading files
-  file_name <- as.data.frame(box_dl(file_id = id))
-  write.table(get(file_name), file = paste0('~/KP/reads/',file_name))
+  file_name <- box_dl(file_id = id, local_dir = getwd())
   
   print(paste0(file_name,' file written!'))
   
