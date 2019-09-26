@@ -1,4 +1,10 @@
 # convert homer.motif to meme.motif format
+# how to run:
+#source("/path/to/motif2meme.R")
+#motif2meme("/path/to/homerMotifs.all.motifs")
+#motif2meme("/path/to/knownResults.all.motif")
+
+# output: homerMotifs.all.motifs.meme & knownResults.all.motif.meme
 
 #converts a Homer .motif PWM/PFM into MEME format
 motif2meme <- function(inFile) {
