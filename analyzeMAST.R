@@ -195,3 +195,5 @@ names(motif_refseq)[8] <-  'Chr'
 names(motif_refseq)[9] <-  'start'
 
 #write.table(motif_refseq, file = paste0(Sys.Date(),'_motif_refseq_details.txt'), col.names = T, row.names = F, sep = '\t', quote = F)
+
+
