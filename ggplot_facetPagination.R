@@ -46,3 +46,25 @@ for (i in seq_len(n_pages_needed)) {
 
 }
 dev.off()
+
+
+
+
+# -------------------------------------------------------------------------------------- #
+pdf("TARGET-oncoprint-graphs_1.pdf")
+for (i in seq(1, length(unique(TARGET_immune_expr$gene)))) {
+  #pdf(paste0("TARGET-oncoprint-graphs_",i,".pdf"), 7, 5)
+    print(ggplot(TARGET_immune_expr, aes(x = TARGET_immune_expr$MYCN, y = TARGET_immune_expr$FPKM, color=TARGET_immune_expr$MYCN_Status)) +
+    geom_point() +
+    geom_smooth(method=lm, se=FALSE) +
+    xlab("MYCN expression") +
+    ylab("Gene expression") +
+    stat_cor(method = "pearson", aes(label = paste(..r.label..,..rr.label..,..p.label.., sep = "~` `~` `~"))) +
+    #stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),label.x = 0.15, label.y = 1) +
+    facet_wrap_paginate(. ~ TARGET_immune_expr$gene, scales ="free", ncol = 2, nrow = 1, page = i) +
+    theme(strip.text = element_text(size=5), legend.position = "bottom", legend.title = element_text(size=5)) )
+
+}
+dev.off()
+
+
