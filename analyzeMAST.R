@@ -1,6 +1,6 @@
 # script to analyze MAST results: mast.txt
 # get gene and motif information into seperate files
-setwd('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate genes/MAST/knownMotifs_MAST')
+setwd('~/KP/H3K27me3/motif-analysis/46_candidate genes/MAST/knownMotifs_MAST')
 
 library(data.table)
 library(dplyr)
@@ -8,20 +8,20 @@ library(tidyverse)
 
 # 1. Data ---------- 
 # _1.1 reading hg19 tss data ---------
-tss_hg19 <-  read.delim('/Volumes/target_nbl_ngs/KP/hg19/refGene_hg19_TSS.bed.txt', header = F)
+tss_hg19 <-  read.delim('~/KP/hg19/refGene_hg19_TSS.bed.txt', header = F)
 # change column type
 tss_hg19$V1 <-  as.character(tss_hg19$V1)
 
 # _1.2 reading refseq IDS ~ 46 Genes -----------
-refseqID <-  read.delim('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate genes/refseqIDS_46Genes.txt', header = F, sep = '.')
+refseqID <-  read.delim('~/KP/H3K27me3/motif-analysis/46_candidate genes/refseqIDS_46Genes.txt', header = F, sep = '.')
 refseqID <-  as.data.frame(refseqID[,c(1)])
 names(refseqID)[1] <-  'ID'
 
 # _1.3 reading 46 candidate genes --------------
-genes46 <- read.delim('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate genes/both-immune-inter-HR.txt', header = F)
+genes46 <- read.delim('~/KP/H3K27me3/motif-analysis/46_candidate genes/both-immune-inter-HR.txt', header = F)
 
 # _1.4 reading hg19 refGene data --------------
-refGene_hg19 <- read.delim('/Volumes/target_nbl_ngs/KP/hg19/hg19.refGene.txt', header = F) 
+refGene_hg19 <- read.delim('~/KP/hg19/hg19.refGene.txt', header = F) 
 refGene_hg19 <-  refGene_hg19[,c(2,3,4,7,8,13)]
 colnames(refGene_hg19) <-  c('ID','Chr','strand','start','stop','gene')
 
@@ -170,7 +170,7 @@ for(x in 2:nrow(motif_diagram)){
 #write.table(motif_diagram, file = paste0(Sys.Date(),'_motif_start_stop_locations.txt'), col.names = T, row.names = F, sep = '\t', quote = F)
 
 # 6. converting seq.name to refseq ID -------------------------------
-seqname_refseqID_mapping <-  read.delim('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate genes/seqName_refseqID.txt', header = F, sep = ';')
+seqname_refseqID_mapping <-  read.delim('~/KP/H3K27me3/motif-analysis/46_candidate genes/seqName_refseqID.txt', header = F, sep = ';')
 seqname_refseqID_mapping <-  seqname_refseqID_mapping[!duplicated(seqname_refseqID_mapping),]
 
 # merging seq name from motif_diagram with refseq IDS
