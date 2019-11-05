@@ -2,7 +2,7 @@
 # 2. Merge by genes for all amp lines
 # 3. select genes which have peaks in all amp lines
 # 4. compute median/mean signal value
-# "/Volumes/target_nbl_ngs/KP/H3K27me3/masterFile_histoneMarks_MYCN/"
+# "~/KP/H3K27me3/masterFile_histoneMarks_MYCN/"
 
 library(data.table)
 library(tidyverse)
@@ -54,7 +54,7 @@ cl <- c('COGN415','KELLY','LAN5','NB1643','NB69')
 marks <- c('H3K27Ac','H3K27me3','H3K4me1','H3K4me3','NMYC')
 
 for(y in marks){
-  work_dir <- paste0('/Volumes/target_nbl_ngs/KP/H3K27me3/masterFile_histoneMarks_MYCN/',y,'_overlap/')
+  work_dir <- paste0('~/KP/H3K27me3/masterFile_histoneMarks_MYCN/',y,'_overlap/')
   for(x in cl){
     
     name <- paste0(x,'_',y)
@@ -99,7 +99,7 @@ NB69 <- Reduce(function(x, y) merge(x, y, by = c("Gene.Name"), all = TRUE), list
 
 
 # read 46 genes
-genes46 <- read.delim('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate\ genes/both-immune-inter-HR.txt',
+genes46 <- read.delim('~/KP/H3K27me3/motif-analysis/46_candidate\ genes/both-immune-inter-HR.txt',
                       header = F)
 
 COG_46 <- merge(COG, genes46, by.x = 'Gene.Name', by.y = 'V1')
@@ -129,10 +129,10 @@ col_anno$cellLine <-  as.factor(col_anno$cellLine)
 col_anno$mark <-  as.factor(col_anno$mark)
 
 # row annotation
-oy_grp <- read.delim('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate genes/PCA/orangeYellowGroup_PCA.txt', header = F)
+oy_grp <- read.delim('~/KP/H3K27me3/motif-analysis/46_candidate genes/PCA/orangeYellowGroup_PCA.txt', header = F)
 oy_grp$group <- 'Orange-Yellow'
 
-bg_grp <- read.delim('/Volumes/target_nbl_ngs/KP/H3K27me3/motif-analysis/46_candidate genes/PCA/greebBlueGroup_PCA.txt', header = F)
+bg_grp <- read.delim('~/KP/H3K27me3/motif-analysis/46_candidate genes/PCA/greebBlueGroup_PCA.txt', header = F)
 bg_grp$group <- 'Blue-Green'
 
 row_anno <- rbind(oy_grp,bg_grp)
