@@ -8,7 +8,7 @@ library(ggplot2)
 
 
 # function to wrangle data
-dataWrangle <- function(data, mData, df.name){
+dataWrangle <- function(data, mData){
   df.name <- data %>%
     rownames_to_column(var = 'gene') %>%
     gather(key = 'sample', value = 'FPKM', -c(gene)) %>%
