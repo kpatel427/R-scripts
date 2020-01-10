@@ -1,4 +1,4 @@
-# script to get survival data for AML TARGET data
+# script to ge survival data for AML TARGET data
 # generates KM plots for EIF4E gene
 # plot shows survival probability over days among various RISK groups
 
