@@ -1,5 +1,5 @@
 # script to create MYCN coverage across cellLines
-# setwd("/Volumes/target_nbl_ngs/KP/ExomeDepth")
+# setwd("~/KP/ExomeDepth")
 
 library(tidyverse)
 library(dplyr)
@@ -21,7 +21,7 @@ names(mycnDepth) <- c('name','MYCN_depth', 'CellLine')
 
 
 # reading cellLine data
-#load('/Volumes/target_nbl_ngs/KP/RShiny/data/cellLine_mData.RData')
+#load('~/KP/RShiny/data/cellLine_mData.RData')
 
 # get mycn status for our cell lines
 mycnDepth <- merge(mycnDepth, cellline_mData, by = 'CellLine', all.x = TRUE)
@@ -180,7 +180,7 @@ bottom = ggplot(exomCov, aes(reorder(CellLine, depth), MYCN_FPKM, fill = MYCN_St
           legend.title = element_text(size = 15),
           legend.text = element_text(size = 15))
 
-plots <-grid.arrange(top,bottom)
+plots <- grid.arrange(top,bottom)
 ggsave(plots, filename = paste0(Sys.Date(),'_MYCN_cov_expr.pdf'), width = 15, height = 12)
 
 
