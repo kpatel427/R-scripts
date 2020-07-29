@@ -1,14 +1,15 @@
 # function to normalize/scale values between any range
 
 # Parameters
+# df = data frame
 # x = name of the column to be scaled
 # a = start of a range
 # b = end of a range
 
-normalizeValues <- function(x, a, b){
-  min_logfc <- min(model.hm[,x])
-  max_logfc <- max(model.hm[,x])
+normalizeValues <- function(df, x, a, b){
+  min_logfc <- min(df[,x])
+  max_logfc <- max(df[,x])
   
-  scaled <- as.data.frame(sapply(model.hm[,x], function(x) ( (b-a) * (x - min_logfc)/(max_logfc - min_logfc)) + a ))
-  return(scaled)
+  scaled_log2FC <- as.data.frame(sapply(df[,x], function(x) ( (b-a) * (x - min_logfc)/(max_logfc - min_logfc)) + a ))
+  return(scaled_log2FC)
 }
