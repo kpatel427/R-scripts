@@ -5,6 +5,7 @@
 # x = name of the column to be scaled
 # a = start of a range
 # b = end of a range
+# returns a df one column containing scaled values
 
 normalizeValues <- function(df, x, a, b){
   min_logfc <- min(df[,x])
