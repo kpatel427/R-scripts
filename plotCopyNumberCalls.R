@@ -54,3 +54,132 @@ dev.off()
 #plotCopyNumberSummary(kp, cn.calls, r1=0.25)
 #cn.cols <- getCopyNumberColors()
 #legend("top", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols))
+
+
+
+# script to generate CopyNumber plots for MDX project - for MYCN & c-MYC MDXs across phases
+# setwd("/Volumes/target_nbl_ngs/KP/MDX_Minu/cnvkit/withoutControl")
+library(CopyNumberPlots)
+library(gridExtra)
+
+
+# MYCN Samples ------------------
+mycn.files <- list.files(path='.', pattern='MYCN.*.BQSR.call.cns')
+cn.calls <- list()
+
+for(i in 1:length(mycn.files)){
+  name <- mycn.files[i]
+  name <- gsub('.BQSR.call.cns','',name)
+  assign(name,loadCopyNumberCallsCNVkit(mycn.files[i]))
+  cn.calls[[as.character(name)]] <- get(name)
+}
+
+
+# for multiple Samples
+# to order samples
+cn.calls1 <- list("MYCN-0685-P0"=MYCN0685P0, "MYCN-3927-P1"=MYCN3927P1, "MYCN-6792-P1"=MYCN6792P1, "MYCN-289-P2"=MYCN289P2, "MYCN-2900-P2"=MYCN2900P2)
+
+# running a loop to create plot for every chromsome
+chrs <- c(seq(from = 1, to = 19, by = 1),'X','Y')
+for(i in chrs){
+  pdf(paste0('copyNumberPlots/MYCN_CNCopyNumber_',i,'.pdf'), width = 12, height = 9, onefile = F)
+  plot.new()
+  kp <- plotKaryotype(chromosome = paste0('chr',i), genome = 'mm10')
+  kpAddCytobandLabels(kp)
+  kpAddBaseNumbers(kp, tick.dist = 10000000, tick.len = 10, tick.col="red", cex=1, minor.tick.dist = 1000000, minor.tick.len = 5, minor.tick.col = "gray")   
+  at <- autotrack(current.track = 1, total.tracks = 5)
+  cn.cols <- getCopyNumberColors(colors = "red_blue")
+  plotCopyNumberCalls(kp, cn.calls1, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.8, cn.colors = cn.cols)
+  dev.off()
+}
+
+
+# plotting across all chromosome - dividing into two plots
+# plot1 = chr1-chr11
+pdf('copyNumberPlots/MYCN_CNCopyNumber1to11_.pdf', width = 10, height = 9, onefile = F)
+plot.new()
+kp <- plotKaryotype(genome = 'mm10', plot.type = 1, chromosomes = paste('chr',chrs[1:11], sep = ''))
+kpAddCytobandLabels(kp)
+cn.cols <- getCopyNumberColors(colors = "red_blue")
+plotCopyNumberCalls(kp, cn.calls1, cn.colors = cn.cols, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.5)
+legend("topright", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols), inset = c(-0.5,1.5), xpd = TRUE, 
+       horiz = TRUE, col = c(cn.cols), bty = "n", cex = 0.5, x.intersp=0.5, xjust=0, yjust=0)
+dev.off()
+
+# plot1 = chr12-chrY
+pdf('copyNumberPlots/MYCN_CNCopyNumber12toY_.pdf', width = 10, height = 9, onefile = F)
+plot.new()
+kp <- plotKaryotype(genome = 'mm10', plot.type = 1, chromosomes = paste('chr',chrs[12:21], sep = ''))
+kpAddCytobandLabels(kp)
+cn.cols <- getCopyNumberColors(colors = "red_blue")
+plotCopyNumberCalls(kp, cn.calls1, cn.colors = cn.cols, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.5)
+legend("topright", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols), inset = c(-0.5,1.5), xpd = TRUE, 
+       horiz = TRUE, col = c(cn.cols), bty = "n", cex = 0.5, x.intersp=0.5, xjust=0, yjust=0)
+dev.off()
+
+
+# plot.new()
+# kp <- plotKaryotype(genome = 'mm10', plot.type = 1, chromosomes = paste('chr',chrs[12:21], sep = ''))
+# kpAddCytobandLabels(kp)
+# cn.cols <- getCopyNumberColors(colors = "red_blue")
+# plotCopyNumberCalls(kp, cn.calls1, cn.colors = cn.cols, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.5)
+# legend("topright", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols), inset = c(-0.5,1.5), xpd = TRUE, 
+#        horiz = TRUE, col = c(cn.cols), bty = "n", cex = 0.5, x.intersp=0.5, xjust=0, yjust=0)
+
+
+
+# CMYC Samples ------------------
+cmyc.files <- list.files(path='.', pattern='c-Myc.*.BQSR.call.cns')
+cn.calls.cmyc <- list()
+
+for(i in 1:length(cmyc.files)){
+  name <- cmyc.files[i]
+  name <- gsub('.BQSR.call.cns','',name)
+  assign(name,loadCopyNumberCallsCNVkit(cmyc.files[i]))
+  cn.calls.cmyc[[as.character(name)]] <- get(name)
+}
+
+
+# for multiple Samples
+# to order samples
+cn.calls.cmyc <- list("c-Myc-W0172-P0"=`c-MycW0172P0`, "c-Myc-1340-P1"=`c-Myc1340P1`, "c-Myc-W0700-P1"=`c-MycW0700P1`, "c-Myc-7558-P2"=`c-Myc7558P2`)
+
+# running a loop to create plot for every chromsome
+chrs <- c(seq(from = 1, to = 19, by = 1),'X','Y')
+for(i in chrs){
+  pdf(paste0('copyNumberPlots/cMYC_CNCopyNumber_',i,'.pdf'), width = 15, height = 9, onefile = F)
+  plot.new()
+  kp <- plotKaryotype(chromosome = paste0('chr',i), genome = 'mm10')
+  kpAddCytobandLabels(kp)
+  kpAddBaseNumbers(kp, tick.dist = 10000000, tick.len = 10, tick.col="red", cex=1, minor.tick.dist = 1000000, minor.tick.len = 5, minor.tick.col = "gray")   
+  at <- autotrack(current.track = 1, total.tracks = 5)
+  cn.cols <- getCopyNumberColors(colors = "red_blue")
+  plotCopyNumberCalls(kp, cn.calls.cmyc, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.8, cn.colors = cn.cols)
+  dev.off()
+}
+
+
+# plotting across all chromosome - dividing into two plots
+# plot1 = chr1-chr11
+pdf('copyNumberPlots/cMYC_CNCopyNumber1to11_.pdf', width = 10, height = 9, onefile = F)
+plot.new()
+kp <- plotKaryotype(genome = 'mm10', plot.type = 1, chromosomes = paste('chr',chrs[1:11], sep = ''))
+kpAddCytobandLabels(kp)
+cn.cols <- getCopyNumberColors(colors = "red_blue")
+plotCopyNumberCalls(kp, cn.calls.cmyc, cn.colors = cn.cols, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.5)
+legend("topright", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols), inset = c(-0.5,1.5), xpd = TRUE, 
+       horiz = TRUE, col = c(cn.cols), bty = "n", cex = 0.5, x.intersp=0.5, xjust=0, yjust=0)
+dev.off()
+
+# plot1 = chr12-chrY
+pdf('copyNumberPlots/cMYC_CNCopyNumber12toY_.pdf', width = 10, height = 9, onefile = F)
+plot.new()
+kp <- plotKaryotype(genome = 'mm10', plot.type = 1, chromosomes = paste('chr',chrs[12:21], sep = ''))
+kpAddCytobandLabels(kp)
+cn.cols <- getCopyNumberColors(colors = "red_blue")
+plotCopyNumberCalls(kp, cn.calls.cmyc, cn.colors = cn.cols, ymin = -1, ymax=10, r0=0, r1=1, loh.height = 10, label.cex = 0.5)
+legend("topright", legend=names(cn.cols), fill = cn.cols, ncol=length(cn.cols), inset = c(-0.5,1.5), xpd = TRUE, 
+       horiz = TRUE, col = c(cn.cols), bty = "n", cex = 0.5, x.intersp=0.5, xjust=0, yjust=0)
+dev.off()
+
+
