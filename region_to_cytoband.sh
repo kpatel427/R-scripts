@@ -1,4 +1,5 @@
-# region_to_cytoband.sh
+# region_to_cytoband.sh chrom start end
+# region_to_cytoband.sh chrom:start-end
 # C: Nov 27, 2014
 # M: Jan 13, 2015
 # A: Leandro Lima <llima@ime.usp.br>
