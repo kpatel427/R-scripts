@@ -7,21 +7,14 @@ library(ggpubr)
 
 # READ DATA ---------------
 # ...read data: Cell Line data -----------
-load('/Volumes/target_nbl_ngs/KP/RShiny/data/STAR_FPKM_40cells_genes.RData')
-load('/Volumes/target_nbl_ngs/KP/RShiny/data/cellline_mData.RData')
 
 # ...read data: Patient data -----------
 # TARGET
-load('/Volumes/target_nbl_ngs/KP/RShiny/data/TARGET_NBL_FPKM_PST_data.RData')
-load('/Volumes/target_nbl_ngs/KP/RShiny/data/TARGET_NBL_FPKM_PST_mData.RData')
 
 # GMKF
-load('/Volumes/target_nbl_ngs/KP/MYCN_E3_ligases/gabbyMiller_RNASeq.RData')
-load('/Volumes/target_nbl_ngs/KP/MYCN_E3_ligases/gabbyMiller_RNASeq_clinical.RData')
 
 # ...read data: PDX data -----------
-load('/Volumes/target_nbl_ngs/KP/RShiny/data/PPTC_FPKM_hg19_Wheeler_subtracted_data.RData')
-load('/Volumes/target_nbl_ngs/KP/RShiny/data/PPTC_FPKM_hg19_Wheeler_subtracted_mData.RData')
+
 # to keep only NBL PDXs
 PPTC_FPKM_hg19_Wheeler_subtracted_mData <- PPTC_FPKM_hg19_Wheeler_subtracted_mData[PPTC_FPKM_hg19_Wheeler_subtracted_mData$CANCER_TYPE_DETAILED == "Neuroblastoma",]
 
