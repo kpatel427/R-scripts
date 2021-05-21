@@ -1,6 +1,6 @@
 # script to correlate MYCN & c-MYC with BPTF across cell lines, patients and PDXs
 # also check correlation with CRC (Core Regulatory Circuit) genes 
-# setwd("/Volumes/target_nbl_ngs/KP/BPTF")
+# setwd("~/KP/BPTF")
 
 library(tidyverse)
 library(ggpubr)
