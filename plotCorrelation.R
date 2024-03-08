@@ -40,7 +40,8 @@ plotCorr <- function(df,colorby) {
     xlab("MYCN expression") +
     ylab("Gene expression") +
     theme_bw() +
-    stat_cor(method = "pearson", aes(label = paste(..r.label..,..rr.label..,..p.label.., sep = "~` `~` `~"))) +
+    #stat_cor(method = "pearson", aes(label = paste(..r.label..,..rr.label..,..p.label.., sep = "~` `~` `~"))) +
+     stat_cor(method = "pearson", aes(label = paste(after_stat(r.label),after_stat(rr.label),after_stat(p.label), sep = "~` `~` `~"))) +
     facet_wrap(. ~ gene, scales = "free") +
     theme(strip.text = element_text(size=8), legend.position = "bottom", legend.title = element_text(size=5))
   
